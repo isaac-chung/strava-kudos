@@ -1,9 +1,11 @@
 name: Give Strava Kudos
 
 on:
-  # Triggers every 3rd hour
+  # Triggers every 30th minute 3rd hour
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: "30 */3 * * *"
+  workflow_dispatch:
+  
 env:
   STRAVA_EMAIL: ${{ secrets.STRAVA_EMAIL }}
   STRAVA_PASSWORD: ${{ secrets.STRAVA_PASSWORD }}

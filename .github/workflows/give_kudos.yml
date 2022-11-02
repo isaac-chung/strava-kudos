@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: "30 */3 * * *"
   workflow_dispatch:
-  
+
 env:
   STRAVA_EMAIL: ${{ secrets.STRAVA_EMAIL }}
   STRAVA_PASSWORD: ${{ secrets.STRAVA_PASSWORD }}
@@ -19,5 +19,6 @@ jobs:
           python-version: '3.7.6'
           cache: 'pip'
       - run: pip install -r requirements.txt
+      - run: playwright install
       - run: python give_kudos.py
         

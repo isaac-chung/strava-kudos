@@ -1,7 +1,7 @@
 import os
 import time
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError
 
 BASE_URL = "https://www.strava.com/"
 
@@ -51,9 +51,12 @@ class KudosGiver:
         for i in range(b_count):
             button = button_locator.nth(i)
             if button.get_by_test_id("unfilled_kudos").count():
-                button.click()
-                given_count += 1
-                time.sleep(1)
+                try:
+                    button.click(timeout=3000)
+                    given_count += 1
+                    time.sleep(1)
+                except TimeoutError:
+                    print("Click timed out.")
         print(f"Kudos given: {given_count}")
         return given_count
 

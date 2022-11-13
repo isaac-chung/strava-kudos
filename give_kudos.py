@@ -11,7 +11,7 @@ class KudosGiver:
     Following. Additionally, scrolls down to check for more activities
     until no more kudos can be given at this time.
     """
-    def __init__(self, max_retry_scroll=3) -> None:
+    def __init__(self, max_retry_scroll=3, max_run_duration=1800) -> None:
         self.EMAIL = os.environ.get('STRAVA_EMAIL')
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
 
@@ -20,10 +20,13 @@ class KudosGiver:
                 e.g. run export STRAVA_EMAIL=YOUR_EMAIL")
 
         self.max_retry_scroll = max_retry_scroll
+        self.max_run_duration = max_run_duration
         self.kudos_button_pattern = '[data-testid="kudos_button"]'
         p = sync_playwright().start()
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
+        
+        self.start_time = time.time()
 
 
     def email_login(self):
@@ -64,7 +67,11 @@ class KudosGiver:
         curr_retry = self.max_retry_scroll
 
         ## Scroll down and repeat ##
-        while kudos_given or curr_retry: 
+        while kudos_given or curr_retry:
+            curr_duration = time.time() - self.start_time
+            if curr_duration > self.max_run_duration:
+                print("Max run duration reached.")
+                break
             self.page.mouse.wheel(0, 12000)
             time.sleep(5)
             kudos_given = self.locate_kudos_buttons_and_maybe_give_kudos(button_locator=button_locator)

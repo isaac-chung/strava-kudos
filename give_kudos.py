@@ -70,7 +70,7 @@ class KudosGiver:
         curr_retry = self.max_retry_scroll
 
         ## Scroll down and repeat ##
-        while kudos_given or curr_retry:
+        while kudos_given or curr_retry > 0:
             curr_duration = time.time() - self.start_time
             if curr_duration > self.max_run_duration:
                 print("Max run duration reached.")

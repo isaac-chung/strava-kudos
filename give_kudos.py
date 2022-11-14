@@ -78,7 +78,8 @@ class KudosGiver:
             self.page.mouse.wheel(0, 12000)
             time.sleep(5)
             kudos_given = self.locate_kudos_buttons_and_maybe_give_kudos(button_locator=button_locator)
-            curr_retry -= 1
+            if not kudos_given:
+                curr_retry -= 1
         
         print("That's all, folks! Terminating... ")
         self.browser.close()

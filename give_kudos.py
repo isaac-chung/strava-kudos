@@ -11,7 +11,7 @@ class KudosGiver:
     Following. Additionally, scrolls down to check for more activities
     until no more kudos can be given at this time.
     """
-    def __init__(self, max_retry_scroll=3, max_run_duration=1800) -> None:
+    def __init__(self, max_retry_scroll=3, max_run_duration=540) -> None:
         self.EMAIL = os.environ.get('STRAVA_EMAIL')
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
 
@@ -52,7 +52,7 @@ class KudosGiver:
             button = button_locator.nth(i)
             if button.get_by_test_id("unfilled_kudos").count():
                 try:
-                    button.click(timeout=540)
+                    button.click(timeout=1000)
                     given_count += 1
                     time.sleep(1)
                 except TimeoutError:

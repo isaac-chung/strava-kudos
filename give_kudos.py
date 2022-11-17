@@ -52,7 +52,7 @@ class KudosGiver:
             button = button_locator.nth(i)
             if button.get_by_test_id("unfilled_kudos").count():
                 try:
-                    button.click(timeout=3000)
+                    button.click(timeout=540)
                     given_count += 1
                     time.sleep(1)
                 except TimeoutError:

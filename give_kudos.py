@@ -1,7 +1,7 @@
 import os
 import time
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError
 
 BASE_URL = "https://www.strava.com/"
 
@@ -11,7 +11,7 @@ class KudosGiver:
     Following. Additionally, scrolls down to check for more activities
     until no more kudos can be given at this time.
     """
-    def __init__(self, max_retry_scroll=3) -> None:
+    def __init__(self, max_retry_scroll=3, max_run_duration=540) -> None:
         self.EMAIL = os.environ.get('STRAVA_EMAIL')
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
 
@@ -20,10 +20,13 @@ class KudosGiver:
                 e.g. run export STRAVA_EMAIL=YOUR_EMAIL")
 
         self.max_retry_scroll = max_retry_scroll
+        self.max_run_duration = max_run_duration
         self.kudos_button_pattern = '[data-testid="kudos_button"]'
         p = sync_playwright().start()
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
+        
+        self.start_time = time.time()
 
 
     def email_login(self):
@@ -48,9 +51,12 @@ class KudosGiver:
         for i in range(b_count):
             button = button_locator.nth(i)
             if button.get_by_test_id("unfilled_kudos").count():
-                button.click()
-                given_count += 1
-                time.sleep(1)
+                try:
+                    button.click(timeout=1000)
+                    given_count += 1
+                    time.sleep(1)
+                except TimeoutError:
+                    print("Click timed out.")
         print(f"Kudos given: {given_count}")
         return given_count
 
@@ -64,11 +70,16 @@ class KudosGiver:
         curr_retry = self.max_retry_scroll
 
         ## Scroll down and repeat ##
-        while kudos_given or curr_retry: 
+        while kudos_given or curr_retry > 0:
+            curr_duration = time.time() - self.start_time
+            if curr_duration > self.max_run_duration:
+                print("Max run duration reached.")
+                break
             self.page.mouse.wheel(0, 12000)
             time.sleep(5)
             kudos_given = self.locate_kudos_buttons_and_maybe_give_kudos(button_locator=button_locator)
-            curr_retry -= 1
+            if not kudos_given:
+                curr_retry -= 1
         
         print("That's all, folks! Terminating... ")
         self.browser.close()

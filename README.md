@@ -21,6 +21,16 @@ python3 give_kudos.py
 ### Playwright
 [Playwright](https://github.com/microsoft/playwright-python) is used, so be sure to follow instructions to install it properly. 
 
+Execute:
+```shell
+pip install -r requirements
+```
+And after:
+```shell
+python -m playwright install
+python -m playwright install-deps
+```
+
 ### Environment Variables
 
 Set the environment variables for your email and password as follows:

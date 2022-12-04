@@ -1,5 +1,6 @@
 import os
 import time
+import send_telegram
 
 from playwright.sync_api import sync_playwright, TimeoutError
 
@@ -80,12 +81,14 @@ class KudosGiver:
             kudos_given = self.locate_kudos_buttons_and_maybe_give_kudos(button_locator=button_locator)
             if not kudos_given:
                 curr_retry -= 1
-        
+        send_telegram.send_to_telegram('send_telegram.send_to_telegram')
         print("That's all, folks! Terminating... ")
+
         self.browser.close()
         
 
 def main():
+    send_telegram.send_to_telegram('Trying to give kudos')
     kg = KudosGiver()
     kg.email_login()
     kg.give_kudos()

@@ -20,6 +20,7 @@ class KudosGiver:
 
         self.max_run_duration = max_run_duration
         self.start_time = time.time()
+        self.num_entries = 200
         self.kudos_button_pattern = '[data-testid="kudos_button"]'
         self.web_feed_entry_pattern = '[data-testid=web-feed-entry]'
 
@@ -38,7 +39,7 @@ class KudosGiver:
         self.page.click("button[type='submit']")
         print("---Logged in!!---")
         # limit activities count by GET parameter
-        self.page.goto(os.path.join(BASE_URL, "dashboard?num_entries=50"), wait_until="networkidle")
+        self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"), wait_until="networkidle")
         self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
         print(f"own_profile_id: {self.own_profile_id}")
 

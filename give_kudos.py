@@ -71,24 +71,26 @@ class KudosGiver:
                     if participant.get_by_test_id("owners-name").get_attribute('href').split("/athletes/")[1] != self.own_profile_id:
                         kudos_container = web_feed.get_by_test_id("kudos_comments_container").nth(j)
                         button = kudos_container.get_by_test_id("unfilled_kudos")
-                        if button.count() == 1:
-                            print("Feed has no kudo")
-                            button.click(timeout=0, no_wait_after=True)
-                            print("Kudos button clicked")
-                            given_count += 1
-                            time.sleep(1)
+                        given_count += self.click_kudos_button(unfilled_kudos_container=button)
             else:
                 # ignore own activities
                 if web_feed.get_by_test_id("owners-name").get_attribute('href').split("/athletes/")[1] != self.own_profile_id:
                     button = web_feed.get_by_test_id("unfilled_kudos")
-                    if button.count() == 1:
-                        print("Feed has no kudo")
-                        button.click(timeout=0, no_wait_after=True)
-                        print("clicked")
-                        given_count += 1
-                        time.sleep(1)
+                    given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"Kudos given: {given_count}")
         return given_count
+
+    def click_kudos_button(self, unfilled_kudos_container) -> int:
+        """
+        input: playwright.locator class
+        Returns 1 if kudos button was clicked else 0
+        """
+        if unfilled_kudos_container.count() == 1:
+            unfilled_kudos_container.click(timeout=0, no_wait_after=True)
+            print("Kudos button clicked")
+            time.sleep(1)
+            return 1
+        return 0
 
     def give_kudos(self):
         """

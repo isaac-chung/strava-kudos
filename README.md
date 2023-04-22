@@ -4,7 +4,7 @@
 
 A Python tool to automatically give [Strava](https://www.strava.com) Kudos to recent activities on your feed. There are a few repos that uses JavaScript like [strava-kudos-lambda](https://github.com/mjad-org/strava-kudos-lambda) and [strava-kudos](https://github.com/rnvo/strava-kudos). 
 
-The repo is set up so that the script runs on a set schedule via Github Actions. Github suggests in their [docs](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule) to not run cron jobs at the start of every hour to avoid delays so minute30 was chosen here. Feel free to change it to whenever you want. There is also a `max_run_duration` parameter which is 30 minutes by default so that we don't exceed the [monthly Github Action free tier minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes) when the action is triggered once a day.
+The repo is set up so that the script runs on a set schedule via Github Actions. Github suggests in their [docs](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule) to not run cron jobs at the start of every hour to avoid delays so minute30 was chosen here. Feel free to change it to whenever you want. There is also a `max_run_duration` parameter which is 9 minutes by default so that we don't exceed the [monthly Github Action free tier minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes) when the action is triggered a few times a day.
 
 ## 🏃 Usage
 1. Fork the repo

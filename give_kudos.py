@@ -20,7 +20,7 @@ class KudosGiver:
 
         self.max_run_duration = max_run_duration
         self.start_time = time.time()
-        self.num_entries = 200
+        self.num_entries = 100
         self.web_feed_entry_pattern = '[data-testid=web-feed-entry]'
 
         p = sync_playwright().start()
@@ -67,17 +67,39 @@ class KudosGiver:
                 for j in range(p_count):
                     participant = web_feed.get_by_test_id("entry-header").nth(j)
                     # ignore own activities
-                    if participant.get_by_test_id("owners-name").get_attribute('href').split("/athletes/")[1] != self.own_profile_id:
+                    if self.is_participant_me(participant):
                         kudos_container = web_feed.get_by_test_id("kudos_comments_container").nth(j)
-                        button = kudos_container.get_by_test_id("unfilled_kudos")
+                        button = self.find_unfilled_kudos_button(kudos_container)
                         given_count += self.click_kudos_button(unfilled_kudos_container=button)
             else:
                 # ignore own activities
-                if web_feed.get_by_test_id("owners-name").get_attribute('href').split("/athletes/")[1] != self.own_profile_id:
-                    button = web_feed.get_by_test_id("unfilled_kudos")
+                if self.is_participant_me(web_feed):
+                    button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"Kudos given: {given_count}")
         return given_count
+    
+    def is_participant_me(self, container) -> bool:
+        """
+        Returns true is the container's owner is logged-in user.
+        """
+        owner = self.own_profile_id
+        try:
+            owner = container.get_by_test_id("owners-name").get_attribute('href').split("/athletes/")[1]
+        except:
+            print("Some issue with getting owners-name container.")
+        return owner == self.own_profile_id
+    
+    def find_unfilled_kudos_button(self, container):
+        """
+        Returns button as a playwright.locator class
+        """
+        button = None
+        try:
+            button = container.get_by_test_id("unfilled_kudos")
+        except:
+            print("Some issue with finding the unfilled_kudos container.")
+        return button
 
     def click_kudos_button(self, unfilled_kudos_container) -> int:
         """
@@ -86,7 +108,6 @@ class KudosGiver:
         """
         if unfilled_kudos_container.count() == 1:
             unfilled_kudos_container.click(timeout=0, no_wait_after=True)
-            print("Kudos button clicked")
             time.sleep(1)
             return 1
         return 0

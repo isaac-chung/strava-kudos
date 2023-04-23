@@ -40,8 +40,6 @@ class KudosGiver:
         # limit activities count by GET parameter
         self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"), wait_until="networkidle")
         self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
-        print(f"own_profile_id: {self.own_profile_id}")
-
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """
@@ -60,10 +58,10 @@ class KudosGiver:
 
             web_feed = web_feed_entry_locator.nth(i)
             p_count = web_feed.get_by_test_id("entry-header").count()
+            print(f"p_count: {p_count}")
 
             # check if activity has multiple participants
             if p_count > 1:
-                print(f"Found multiple list entries: {p_count}")
                 for j in range(p_count):
                     participant = web_feed.get_by_test_id("entry-header").nth(j)
                     # ignore own activities
@@ -85,7 +83,12 @@ class KudosGiver:
         """
         owner = self.own_profile_id
         try:
-            owner = container.get_by_test_id("owners-name").get_attribute('href').split("/athletes/")[1]
+            h = container.get_by_test_id("owners-name").get_attribute('href')
+            print(h, end=' ')
+            hl = h.split("/athletes/")
+            print(hl, end=' ')
+            owner = hl[1]
+            print(owner, end=' ')
         except:
             print("Some issue with getting owners-name container.")
         return owner == self.own_profile_id
@@ -108,6 +111,7 @@ class KudosGiver:
         """
         if unfilled_kudos_container.count() == 1:
             unfilled_kudos_container.click(timeout=0, no_wait_after=True)
+            print('=', end='')
             time.sleep(1)
             return 1
         return 0

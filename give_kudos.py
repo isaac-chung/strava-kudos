@@ -58,20 +58,19 @@ class KudosGiver:
 
             web_feed = web_feed_entry_locator.nth(i)
             p_count = web_feed.get_by_test_id("entry-header").count()
-            print(f"p_count: {p_count}")
 
             # check if activity has multiple participants
             if p_count > 1:
                 for j in range(p_count):
                     participant = web_feed.get_by_test_id("entry-header").nth(j)
                     # ignore own activities
-                    if self.is_participant_me(participant):
+                    if not self.is_participant_me(participant):
                         kudos_container = web_feed.get_by_test_id("kudos_comments_container").nth(j)
                         button = self.find_unfilled_kudos_button(kudos_container)
                         given_count += self.click_kudos_button(unfilled_kudos_container=button)
             else:
                 # ignore own activities
-                if self.is_participant_me(web_feed):
+                if not self.is_participant_me(web_feed):
                     button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"Kudos given: {given_count}")
@@ -84,11 +83,8 @@ class KudosGiver:
         owner = self.own_profile_id
         try:
             h = container.get_by_test_id("owners-name").get_attribute('href')
-            print(h, end=' ')
             hl = h.split("/athletes/")
-            print(hl, end=' ')
             owner = hl[1]
-            print(owner, end=' ')
         except:
             print("Some issue with getting owners-name container.")
         return owner == self.own_profile_id

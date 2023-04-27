@@ -37,7 +37,22 @@ class KudosGiver:
         self.page.fill("#password", self.PASSWORD)
         self.page.click("button[type='submit']")
         print("---Logged in!!---")
-        # limit activities count by GET parameter
+        self._run_with_retries(func=self._get_page_and_own_profile)
+        
+    def _run_with_retries(self, func, retries=3):
+        for i in range(retries):
+            if i == retries - 1:
+                raise Exception(f"Retries {retries} times failed.")
+            try:
+                func()
+                return
+            except:
+                time.sleep(1)
+
+    def _get_page_and_own_profile(self):
+        """
+        Limit activities count by GET parameter and get own profile ID.
+        """
         self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"), wait_until="networkidle")
         self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
 

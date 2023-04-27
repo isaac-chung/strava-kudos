@@ -40,6 +40,9 @@ class KudosGiver:
         self._run_with_retries(func=self._get_page_and_own_profile)
         
     def _run_with_retries(self, func, retries=3):
+        """
+        Retry logic with sleep in between tries.
+        """
         for i in range(retries):
             if i == retries - 1:
                 raise Exception(f"Retries {retries} times failed.")

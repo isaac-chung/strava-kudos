@@ -56,8 +56,18 @@ class KudosGiver:
         """
         Limit activities count by GET parameter and get own profile ID.
         """
-        self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"), wait_until="networkidle")
-        self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
+        self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"))
+
+        ## Scrolling for lazy loading elements.
+        for _ in range(5):
+            self.page.keyboard.press('PageDown')
+            time.sleep(0.5)
+            self.page.keyboard.press('PageUp')
+
+        try:
+            self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
+        except:
+            self.own_profile_id = ''
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """

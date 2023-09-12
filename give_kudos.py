@@ -67,7 +67,7 @@ class KudosGiver:
         try:
             self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
         except:
-            self.own_profile_id = ''
+            self.own_profile_id = '17796761'  ## your own athlete id.
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """

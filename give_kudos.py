@@ -65,9 +65,10 @@ class KudosGiver:
             self.page.keyboard.press('PageUp')
 
         try:
-            self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
+            self.own_profile_id = self.page.locator(".user-menu > a").get_attribute('href').split("/athletes/")[1]
+            print("id", self.own_profile_id)
         except:
-            self.own_profile_id = '17796761'  ## your own athlete id.
+            print("can't find own profile ID")
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """

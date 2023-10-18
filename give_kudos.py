@@ -114,11 +114,9 @@ class KudosGiver:
         """
         Returns true if the container is a club post
         """
-        print("group header:", container.get_by_test_id("group-header").count())
         if(container.get_by_test_id("group-header").count() > 0):
             return True
         
-        print("club member post:", container.locator(".clubMemberPostHeaderLinks").count())
         if(container.locator(".clubMemberPostHeaderLinks").count() > 0):
             return True
 

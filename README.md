@@ -16,6 +16,14 @@ Alternatively, you can run the script manually with
 python3 give_kudos.py
 ```
 
+Alternatively, you can run the script using docker:
+1. Create a .env file
+```
+STRAVA_EMAIL=""
+STRAVA_PASSWORD=""
+```
+2. Start the container `docker-compose up``
+
 ## 🛠️Setup
 
 ### Playwright

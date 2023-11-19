@@ -2,6 +2,7 @@ version: '3'
 services:
   strava_kudos:
     image: ghcr.io/8ch9azbsfifz/strava-kudos:latest
+    #build: .
     environment:
       STRAVA_EMAIL: "${STRAVA_EMAIL}"
       STRAVA_PASSWORD: "${STRAVA_PASSWORD}"

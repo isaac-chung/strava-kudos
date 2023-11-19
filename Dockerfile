@@ -1,5 +1,6 @@
-FROM python:3.9
+FROM ubuntu:22.04
 
+RUN apt update && apt-get -y install python3-pip
 WORKDIR /app
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt

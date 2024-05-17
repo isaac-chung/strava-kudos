@@ -1,6 +1,6 @@
 # Strava Kudos Giver 👍👍👍
 
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-370/) ![Build](https://github.com/MaksimMisin/strava-kudos/actions/workflows/build.yml/badge.svg) ![Build](https://github.com/MaksimMisin/strava-kudos/actions/workflows/give_kudos.yml/badge.svg)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-370/) ![Build](https://github.com/MaksimMisin/strava-kudos/actions/workflows/build.yml/badge.svg) [![Give Strava Kudos](https://github.com/MaksimMisin/strava-kudos/actions/workflows/give_kudos.yml/badge.svg)](https://github.com/MaksimMisin/strava-kudos/actions/workflows/give_kudos.yml)
 
 A Python tool to automatically give [Strava](https://www.strava.com) Kudos to recent activities on your feed. There are a few repos that uses JavaScript like [strava-kudos-lambda](https://github.com/mjad-org/strava-kudos-lambda) and [strava-kudos](https://github.com/rnvo/strava-kudos).
 

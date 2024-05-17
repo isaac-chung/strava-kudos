@@ -32,10 +32,8 @@ export STRAVA_PASSWORD=YOUR_PASSWORD
 ### Github Actions
 To add secrets for GH actions, navigate to Settings -> Security -> Secrets and Variables -> Actions. Enter your email and password within `Repository Secrets`.
 
-## 🔬Testing
-Manual testing was done in Python 3.9.10 on Ubuntu 20.04.6.
 
 ## Contributions
-Let me know if you wish to add anything or if there are any issues!
+Let me know if you wish to add anything or if there are any issues :)
 
 [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)

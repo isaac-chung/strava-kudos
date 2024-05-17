@@ -2,23 +2,20 @@ name: Give Strava Kudos
 
 on:
   schedule:
-    - cron: "30 5-23/6 * * *"
+    - cron: "30 6 */3 * *"
   workflow_dispatch:
 
-env:
-  STRAVA_EMAIL: ${{ secrets.STRAVA_EMAIL }}
-  STRAVA_PASSWORD: ${{ secrets.STRAVA_PASSWORD }}
 jobs:
   run-kudos-cron:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9.10'
-          cache: 'pip'
-      - run: pip install -r requirements.txt
-      - run: playwright install
-      - run: python give_kudos.py
-        
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
+
+      - name: run container
+        run: |
+          docker run --cpus 1 -e STRAVA_EMAIL=${{ secrets.STRAVA_EMAIL }} -e STRAVA_PASSWORD=${{ secrets.STRAVA_PASSWORD }} ghcr.io/${{ env.OWNER_LC }}/strava-kudos:latest

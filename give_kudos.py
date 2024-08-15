@@ -33,9 +33,10 @@ class KudosGiver:
         Login using email and password
         """
         self.page.goto(os.path.join(BASE_URL, 'login'))
-        self.page.fill('#email', self.EMAIL)
-        self.page.fill("#password", self.PASSWORD)
-        self.page.click("button[type='submit']")
+        self.page.get_by_role("button", name="Reject").click()
+        self.page.get_by_placeholder("Your Email").fill(self.EMAIL)
+        self.page.get_by_placeholder("Password").fill(self.PASSWORD)
+        self.page.get_by_role("button", name='Log In').click()
         print("---Logged in!!---")
         self._run_with_retries(func=self._get_page_and_own_profile)
         

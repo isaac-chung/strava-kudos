@@ -18,4 +18,4 @@ jobs:
 
       - name: run container
         run: |
-          docker run --cpus 1 -e STRAVA_EMAIL=${{ secrets.STRAVA_EMAIL }} -e STRAVA_PASSWORD=${{ secrets.STRAVA_PASSWORD }} ghcr.io/${{ env.OWNER_LC }}/strava-kudos:latest
+          docker run --cpus 1 -e STRAVA_EMAIL=${{ secrets.STRAVA_EMAIL }} -e STRAVA_PASSWORD="'${{ secrets.STRAVA_PASSWORD }}'" ghcr.io/${{ env.OWNER_LC }}/strava-kudos:latest

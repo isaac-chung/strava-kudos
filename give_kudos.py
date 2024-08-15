@@ -37,8 +37,21 @@ class KudosGiver:
             self.page.get_by_role("button", name="Reject").click(timeout=5000)
         except:
             pass
-        self.page.get_by_placeholder("Your Email").fill(self.EMAIL)
-        self.page.get_by_placeholder("Password").fill(self.PASSWORD)
+
+        try:
+            self.page.get_by_placeholder("Your Email").fill(self.EMAIL, timeout=5000)
+            print("Using placeholder")
+        except:
+            self.page.locator("input#email").fill(self.EMAIL, timeout=5000)
+            print("Using CSS selector (using ID)")
+
+        try:
+            self.page.get_by_placeholder("Password").fill(self.PASSWORD, timeout=5000)
+            print("Using placeholder")
+        except:
+            self.page.locator("input#password").fill(self.PASSWORD, timeout=5000)
+            print("Using CSS selector (using ID)")
+
         self.page.get_by_role("button", name='Log In').click()
         print("---Logged in!!---")
         self._run_with_retries(func=self._get_page_and_own_profile)

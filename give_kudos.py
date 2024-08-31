@@ -35,22 +35,23 @@ class KudosGiver:
         self.page.goto(os.path.join(BASE_URL, 'login'))
         try:
             self.page.get_by_role("button", name="Reject").click(timeout=5000)
+            print("Rejecting cookies.")
         except:
             pass
 
         try:
             self.page.get_by_placeholder("Your Email").fill(self.EMAIL, timeout=5000)
             print("Using placeholder")
-        except:
+        except Exception as e:
             self.page.locator("input#email").fill(self.EMAIL, timeout=5000)
-            print("Using CSS selector (using ID)")
+            print("Using CSS selector (using ID)", e)
 
         try:
             self.page.get_by_placeholder("Password").fill(self.PASSWORD, timeout=5000)
             print("Using placeholder")
-        except:
+        except Exception as e:
             self.page.locator("input#password").fill(self.PASSWORD, timeout=5000)
-            print("Using CSS selector (using ID)")
+            print("Using CSS selector (using ID)", e)
 
         self.page.get_by_role("button", name='Log In').click()
         print("---Logged in!!---")
@@ -83,9 +84,15 @@ class KudosGiver:
 
         try:
             self.own_profile_id = self.page.locator(".user-menu > a").get_attribute('href').split("/athletes/")[1]
-            print("id", self.own_profile_id)
         except:
-            print("can't find own profile ID")
+            try:
+                full_link = self.page.locator("#athlete-profile").get_by_test_id("avatar-wrapper").get_attribute('href')
+                self.own_profile_id = full_link.split("/athletes/")[1]
+                print("Found top right avatar")
+            except Exception as e:
+                print("can't find own profile ID", e)
+
+        print("id", self.own_profile_id)
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """

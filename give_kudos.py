@@ -22,6 +22,7 @@ class KudosGiver:
         self.start_time = time.time()
         self.num_entries = 100
         self.web_feed_entry_pattern = '[data-testid=web-feed-entry]'
+        self.own_profile_id = ""
 
         p = sync_playwright().start()
         self.browser = p.firefox.launch() # does not work in chrome
@@ -54,20 +55,20 @@ class KudosGiver:
             print("Using CSS selector (using ID)", e)
 
         self.page.get_by_role("button", name='Log In').click()
+        self._get_dashboard_and_scroll()
+
+        ## confirm logged in
+        if "login" in self.page.url:
+            print(self.page.url)
+            raise Exception("Not logged in.")
+        
+        print("---Logged in!!---")
 
     def email_login(self):
         """ 
         Login with retries. Confirm logged in before getting own profile.
         """
-        self._login_by_email()
-        self._get_dashboard_and_scroll()
-
-        if "login" in self.page.url:
-            print(self.page.url)
-            self._run_with_retries(self._login_by_email)
-        else:
-            print("---Logged in!!---")
-
+        self._run_with_retries(self._login_by_email)
         self._get_own_profile()
         
     def _run_with_retries(self, func, retries=3):

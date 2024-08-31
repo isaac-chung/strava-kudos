@@ -28,7 +28,7 @@ class KudosGiver:
         self.page = self.browser.new_page()
 
 
-    def email_login(self):
+    def _login_by_email(self):
         """
         Login using email and password
         """
@@ -54,8 +54,21 @@ class KudosGiver:
             print("Using CSS selector (using ID)", e)
 
         self.page.get_by_role("button", name='Log In').click()
-        print("---Logged in!!---")
-        self._run_with_retries(func=self._get_page_and_own_profile)
+
+    def email_login(self):
+        """ 
+        Login with retries. Confirm logged in before getting own profile.
+        """
+        self._login_by_email()
+        self._get_dashboard_and_scroll()
+
+        if "login" in self.page.url:
+            print(self.page.url)
+            self._run_with_retries(self._login_by_email)
+        else:
+            print("---Logged in!!---")
+
+        self._get_own_profile()
         
     def _run_with_retries(self, func, retries=3):
         """
@@ -70,10 +83,7 @@ class KudosGiver:
             except:
                 time.sleep(1)
 
-    def _get_page_and_own_profile(self):
-        """
-        Limit activities count by GET parameter and get own profile ID.
-        """
+    def _get_dashboard_and_scroll(self):
         self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"))
 
         ## Scrolling for lazy loading elements.
@@ -82,6 +92,11 @@ class KudosGiver:
             time.sleep(0.5)
             self.page.keyboard.press('PageUp')
 
+
+    def _get_own_profile(self):
+        """
+        Limit activities count by GET parameter and get own profile ID.
+        """
         try:
             self.own_profile_id = self.page.locator(".user-menu > a").get_attribute('href').split("/athletes/")[1]
         except:

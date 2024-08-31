@@ -1,0 +1,21 @@
+name: Test Image
+
+on:
+  pull_request:
+    types: [opened]
+
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build container
+        run: docker build . --file Dockerfile -t kudos:test
+
+      - name: Run docker image
+        run: docker run --cpus 1 -e STRAVA_EMAIL=${{ secrets.STRAVA_EMAIL }} -e STRAVA_PASSWORD="'${{ secrets.STRAVA_PASSWORD }}'" kudos:test

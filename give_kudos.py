@@ -22,54 +22,22 @@ class KudosGiver:
         self.start_time = time.time()
         self.num_entries = 100
         self.web_feed_entry_pattern = '[data-testid=web-feed-entry]'
-        self.own_profile_id = ""
 
         p = sync_playwright().start()
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
 
 
-    def _login_by_email(self):
+    def email_login(self):
         """
         Login using email and password
         """
         self.page.goto(os.path.join(BASE_URL, 'login'))
-        try:
-            self.page.get_by_role("button", name="Reject").click(timeout=5000)
-            print("Rejecting cookies.")
-        except:
-            pass
-
-        try:
-            self.page.get_by_placeholder("Your Email").fill(self.EMAIL, timeout=5000)
-            print("Using placeholder")
-        except Exception as e:
-            self.page.locator("input#email").fill(self.EMAIL, timeout=5000)
-            print("Using CSS selector (using ID)", e)
-
-        try:
-            self.page.get_by_placeholder("Password").fill(self.PASSWORD, timeout=5000)
-            print("Using placeholder")
-        except Exception as e:
-            self.page.locator("input#password").fill(self.PASSWORD, timeout=5000)
-            print("Using CSS selector (using ID)", e)
-
-        self.page.get_by_role("button", name='Log In').click()
-        self._get_dashboard_and_scroll()
-
-        ## confirm logged in
-        if "login" in self.page.url:
-            print(self.page.url)
-            raise Exception("Not logged in.")
-        
+        self.page.fill('#email', self.EMAIL)
+        self.page.fill("#password", self.PASSWORD)
+        self.page.click("button[type='submit']")
         print("---Logged in!!---")
-
-    def email_login(self):
-        """ 
-        Login with retries. Confirm logged in before getting own profile.
-        """
-        self._run_with_retries(self._login_by_email)
-        self._get_own_profile()
+        self._run_with_retries(func=self._get_page_and_own_profile)
         
     def _run_with_retries(self, func, retries=3):
         """
@@ -84,7 +52,10 @@ class KudosGiver:
             except:
                 time.sleep(1)
 
-    def _get_dashboard_and_scroll(self):
+    def _get_page_and_own_profile(self):
+        """
+        Limit activities count by GET parameter and get own profile ID.
+        """
         self.page.goto(os.path.join(BASE_URL, f"dashboard?num_entries={self.num_entries}"))
 
         ## Scrolling for lazy loading elements.
@@ -93,22 +64,11 @@ class KudosGiver:
             time.sleep(0.5)
             self.page.keyboard.press('PageUp')
 
-
-    def _get_own_profile(self):
-        """
-        Limit activities count by GET parameter and get own profile ID.
-        """
         try:
             self.own_profile_id = self.page.locator(".user-menu > a").get_attribute('href').split("/athletes/")[1]
+            print("id", self.own_profile_id)
         except:
-            try:
-                full_link = self.page.locator("#athlete-profile").get_by_test_id("avatar-wrapper").get_attribute('href')
-                self.own_profile_id = full_link.split("/athletes/")[1]
-                print("Found top right avatar")
-            except Exception as e:
-                print("can't find own profile ID", e)
-
-        print("id", self.own_profile_id)
+            print("can't find own profile ID")
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """

@@ -163,6 +163,11 @@ class KudosGiver:
         Interate over web feed entries
         """
         ## Give Kudos on loaded page ##
+        try:
+            self.page.get_by_role("button", name="Accept").click(timeout=5000)
+            print("Accepting updated terms.")
+        except:
+            pass
         web_feed_entry_locator = self.page.locator(self.web_feed_entry_pattern)
         self.locate_kudos_buttons_and_maybe_give_kudos(web_feed_entry_locator=web_feed_entry_locator)
         self.browser.close()

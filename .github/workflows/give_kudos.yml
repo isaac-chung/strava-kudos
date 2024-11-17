@@ -2,7 +2,7 @@ name: Give Strava Kudos
 
 on:
   schedule:
-    - cron: "12 22,4,10 * * *"
+    - cron: "12 2,14,20 * * *"
   workflow_dispatch:
 
 env:

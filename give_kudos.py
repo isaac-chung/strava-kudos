@@ -39,6 +39,7 @@ class KudosGiver:
         headers = {
             "Content-Type": "application/json"
         }
+        print(f"payload: {payload}")
         response = requests.post(url, json=payload, headers=headers)
         if response.status_code == 200:
             print("Telegram message sent successfully.")
@@ -116,7 +117,7 @@ class KudosGiver:
                     participant = web_feed.get_by_test_id("entry-header").nth(j)
                     # ignore own activities
                     if not self.is_participant_me(participant):
-                        self._send_telegram_message(message=participant)
+                        self._send_telegram_message(message=f"participant: {participant}")
                         kudos_container = web_feed.get_by_test_id("kudos_comments_container").nth(j)
                         button = self.find_unfilled_kudos_button(kudos_container)
                         given_count += self.click_kudos_button(unfilled_kudos_container=button)

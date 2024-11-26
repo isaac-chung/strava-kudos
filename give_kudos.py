@@ -33,6 +33,10 @@ class KudosGiver:
         Login using email and password
         """
         self.page.goto(os.path.join(BASE_URL, 'login'))
+        try:
+            self.page.get_by_role("button", name="Reject").click(timeout=5000)
+        except:
+            pass
         self.page.fill('#email', self.EMAIL)
         self.page.fill("#password", self.PASSWORD)
         self.page.click("button[type='submit']")

@@ -19,6 +19,6 @@ jobs:
           python-version: '3.9.10'
           cache: 'pip'
       - run: pip install -r requirements.txt
-      - run: playwright install
+      - run: playwright install --with-deps
       - run: python give_kudos.py
         
